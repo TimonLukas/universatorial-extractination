@@ -17,6 +17,15 @@ module.exports = {
     return mergeConfig(config, {
       ...userConfig,
       plugins: [],
+      base: "/universatorial-extractination/storybook/",
     })
+  },
+  managerHead(head, { configType }) {
+    if (configType === "PRODUCTION") {
+      return `
+        ${head}
+        <base href="/universatorial-extractination/storybook/">
+      `
+    }
   },
 }
