@@ -1,24 +1,20 @@
 <template lang="pug">
-canvas(ref="canvas" width="1000" height="800")
-img(src="@/assets/texture-sun.jpg" v-show="false" ref="sunTexture")
+canvas(ref="canvas" :width="width" :height="height")
 </template>
 
 <script lang="ts" setup>
-import {
-  ref,
-  onMounted,
-  onBeforeUnmount,
-  defineProps,
-  computed,
-  watchEffect,
-} from "vue"
-import { useMouse } from "@vueuse/core"
+import { ref, onMounted, onBeforeUnmount, defineProps, computed } from "vue"
+import { useElementSize } from "@vueuse/core"
 
 import { createShaderProgram } from "@/lib/shader"
 import fragmentShader from "@/assets/star-shader-fragment.glsl?raw"
 import vertexShader from "@/assets/star-shader-vertex.glsl?raw"
+import sunTexturePath from "@/assets/texture-sun.jpg"
+import { fetchImage } from "@/lib/image"
 
 const canvas = ref<HTMLCanvasElement>()
+const { width, height } = useElementSize(canvas)
+
 const sunTexture = ref<HTMLImageElement>()
 
 const props = withDefaults(
@@ -44,24 +40,12 @@ const speedFactor = computed(() =>
   Math.max(Math.pow(props.speedFactor + 10, 2) / 100, 0.01)
 )
 
-onMounted(async () => {
+onMounted(() => {
   let alive = true
-
-  watchEffect(() => console.log(props))
 
   onBeforeUnmount(() => {
     alive = false
   })
-
-  await new Promise<void>((resolve) => {
-    if (sunTexture.value!.complete) {
-      return resolve()
-    }
-
-    sunTexture.value!.onload = () => resolve()
-  })
-
-  const mouse = useMouse()
 
   const glCtx = canvas.value!.getContext("webgl")
 
@@ -82,7 +66,6 @@ onMounted(async () => {
     program.value,
     "iResolution"
   )
-  const mouseAttribute = gl.getUniformLocation(program.value, "iMouse")
   const timeAttribute = gl.getUniformLocation(program.value, "iTime")
   const brightnessAttribute = gl.getUniformLocation(
     program.value,
@@ -129,19 +112,6 @@ onMounted(async () => {
   )
 
   const shaderSunTexture = gl.createTexture()
-  gl.bindTexture(gl.TEXTURE_2D, shaderSunTexture)
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    0,
-    gl.RGBA,
-    gl.RGBA,
-    gl.UNSIGNED_BYTE,
-    sunTexture.value!
-  )
-  gl.activeTexture(gl.TEXTURE0)
 
   const previousTime = ref(0)
   const totalTime = ref(0)
@@ -161,8 +131,7 @@ onMounted(async () => {
 
     gl.vertexAttribPointer(positionAttribute, 2, gl.FLOAT, false, 0, 0)
     gl.uniform2f(resolutionAttribute, gl.canvas.width, gl.canvas.height)
-    gl.uniform2f(mouseAttribute, mouse.x.value, mouse.y.value)
-    gl.uniform1f(timeAttribute, totalTime.value / 1000)
+    gl.uniform1f(timeAttribute, currentTime / 1000)
     gl.uniform1i(textureAttribute, 0)
     gl.uniform1f(brightnessAttribute, props.brightness)
     gl.uniform1f(coronaFactorAttribute, props.coronaFactor)
@@ -175,6 +144,38 @@ onMounted(async () => {
     requestAnimationFrame(render)
   }
 
-  requestAnimationFrame(render)
+  ;(async () => {
+    const result = await fetchImage(sunTexturePath)
+
+    if (result.isErr) {
+      return console.error(result.error)
+    }
+
+    console.log(result)
+
+    sunTexture.value = result.value
+
+    gl.bindTexture(gl.TEXTURE_2D, shaderSunTexture)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      sunTexture.value
+    )
+    gl.activeTexture(gl.TEXTURE0)
+
+    requestAnimationFrame(render)
+  })()
 })
 </script>
+
+<style lang="sass" scoped>
+canvas
+  width: 100%
+  height: 100%
+</style>

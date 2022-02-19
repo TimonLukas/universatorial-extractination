@@ -3,16 +3,8 @@ import { reactive } from "vue"
 import Star from "./Star.vue"
 
 export default {
-  title: "UI/Star",
+  title: "Shaders/Star",
   component: Star,
-  argTypes: {
-    speedFactor: {
-      control: {
-        disable: true,
-      },
-    },
-  },
-  decorators: [() => ({ template: "<keep-alive><story/></keep-alive>" })],
 }
 
 const param = (value: number, min: number, max: number) =>
@@ -34,6 +26,8 @@ const Template = (args: never) => ({
   components: { Star },
   setup: () => ({
     args,
+    width: param(1000, 256, 1920),
+    height: param(600, 256, 1920),
     speedFactor: param(0, -10, 20),
     brightness: param(0, 0, 1),
     coronaFactor: param(1, 0, 5),
@@ -43,14 +37,16 @@ const Template = (args: never) => ({
   }),
   template: `
     Based on <a href="https://www.shadertoy.com/view/4dXGR4">https://www.shadertoy.com/view/4dXGR4</a><br />
-    <star
-      :speed-factor="speedFactor.value"
-      :brightness="brightness.value"
-      :corona-factor="coronaFactor.value"
-      :sphere-radius="sphereRadius.value"
-      :total-radius="totalRadius.value"
-      :glow-factor="glowFactor.value"
-    />
+    <div :style="{ width: \`\${width.value}px\`, height: \`\${height.value}px\` }">
+      <star
+        :speed-factor="speedFactor.value"
+        :brightness="brightness.value"
+        :corona-factor="coronaFactor.value"
+        :sphere-radius="sphereRadius.value"
+        :total-radius="totalRadius.value"
+        :glow-factor="glowFactor.value"
+      />
+    </div>
     <br />
     <table>
       <thead>
@@ -62,6 +58,8 @@ const Template = (args: never) => ({
         <th>value</th>
       </tr>
       </thead>
+      ${paramRow("Width", "width", 1)}
+      ${paramRow("Height", "height", 1)}
       ${paramRow("Speed factor", "speedFactor", 0.01)}
       ${paramRow("Brightness", "brightness", 0.01)}
       ${paramRow("Corona factor", "coronaFactor", 0.01)}

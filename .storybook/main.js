@@ -8,16 +8,23 @@ module.exports = {
   core: {
     builder: "storybook-builder-vite",
   },
-  async viteFinal(config) {
+  async viteFinal(config, { configType }) {
     const { config: userConfig } = await loadConfigFromFile(
       { command: "serve", mode: "" },
       resolve(__dirname, "../vite.config.ts")
     )
 
+    const customConfig = {
+      plugins: [],
+    }
+
+    if (configType === "PRODUCTION") {
+      customConfig.base = "/universatorial-extractination/storybook/"
+    }
+
     return mergeConfig(config, {
       ...userConfig,
-      plugins: [],
-      base: "/universatorial-extractination/storybook/",
+      ...customConfig,
     })
   },
   managerHead(head, { configType }) {
