@@ -3,6 +3,17 @@
 # abort on errors
 set -e
 
+git update-index -q --ignore-submodules --refresh
+
+version=$(jq -r .version package.json)
+hash=$(git rev-parse --short HEAD)
+editEmoji=""
+
+if ! git diff-files --quiet --ignore-submodules --
+then
+    editEmoji=" ✏️"
+fi
+
 # build
 yarn build
 
@@ -13,7 +24,7 @@ cd dist
 
 git init
 git add -A
-git commit -m 'deploy'
+git commit -m "Deployment $version ($hash$editEmoji)"
 
 git push -f git@github.com:TimonLukas/universatorial-extractination.git master:gh-pages
 
