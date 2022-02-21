@@ -129,7 +129,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
     float starGlow = min(max(1.0 - dist * (1.0 - iBrightness), 0.0), 1.0);
     fragColor.rgb  = vec3(f * (0.75 + iBrightness * 0.3) * orange) * iGlowFactor * 2.2 + starSphere * iGlowFactor +  corona * orange * max(iCoronaFactor, 0.0) + starGlow * orangeRed;
-    fragColor.a	   = 0.0;
+    fragColor.a	   = length(fragColor.rgb);
 }
 
 void main() {

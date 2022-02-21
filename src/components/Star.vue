@@ -3,7 +3,7 @@ canvas(ref="canvas" :width="width" :height="height")
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, defineProps, computed } from "vue"
+import { ref, onMounted, onBeforeUnmount, computed, unref } from "vue"
 import { useElementSize } from "@vueuse/core"
 
 import { createShaderProgram } from "@/lib/shader"
@@ -117,6 +117,7 @@ onMounted(() => {
   const totalTime = ref(0)
   function render(currentTime: number) {
     if (!alive) {
+      console.log('stopping rendering star :(')
       return
     }
 
@@ -130,8 +131,8 @@ onMounted(() => {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 
     gl.vertexAttribPointer(positionAttribute, 2, gl.FLOAT, false, 0, 0)
-    gl.uniform2f(resolutionAttribute, gl.canvas.width, gl.canvas.height)
-    gl.uniform1f(timeAttribute, currentTime / 1000)
+    gl.uniform2f(resolutionAttribute, width.value, height.value)
+    gl.uniform1f(timeAttribute, unref(totalTime) / 1e3)
     gl.uniform1i(textureAttribute, 0)
     gl.uniform1f(brightnessAttribute, props.brightness)
     gl.uniform1f(coronaFactorAttribute, props.coronaFactor)
@@ -150,8 +151,6 @@ onMounted(() => {
     if (result.isErr) {
       return console.error(result.error)
     }
-
-    console.log(result)
 
     sunTexture.value = result.value
 
