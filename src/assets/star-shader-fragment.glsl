@@ -58,17 +58,7 @@ float perlin(in float pos) {
 #define SMOOTH_PERLIN_PARAMS_ANGLE_1  50.0, 10.0, 6.0,  3.0,  3.0,  3.0
 
 float smoothPerlin(float offset, float a, float b, float c, float d, float e, float f) {
-    float chunk_size = 5.0;
-
-    return
-        perlin(offset + 100.0) +
-        perlin(offset * a + 200.0) / 2.0 +
-        perlin(offset * b + 300.0) / 4.0 +
-        perlin(offset * c + 400.0) / 8.0 +
-        perlin(offset * d + 500.0) / 16.0 +
-        perlin(offset * e + 600.0) / 32.0 +
-        perlin(offset * f + 600.0) / 64.0 +
-        chunk_size / 2.0;
+    return (sin(offset * a) * b + tan(offset * c) * d + cos(offset * e) * f) / (b + d + f);
 }
 
 vec3 orange		= vec3(0.8, 0.65, 0.3);
@@ -122,14 +112,13 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
         float texture1Angle = smoothPerlin(time / 12.50, SMOOTH_PERLIN_PARAMS_ANGLE_1);
 
         vec3 starTexture0 = texture2D(iChannel0, baseUv + normalize(vec2(sin(texture0Angle), cos(texture0Angle)))).rgb * 0.5;
-        vec3 starTexture1 = texture2D(iChannel0, baseUv / textureSizeModifier1 + normalize(vec2(sin(texture1Angle), cos(texture1Angle))) * 1e-2).rgb * 0.75;
 
-        starSphere = sqrt(starTexture0 * starTexture1) * 3.0;
+        starSphere = sqrt(starTexture0 * 0.3);
     }
 
     float starGlow = min(max(1.0 - dist * (1.0 - iBrightness), 0.0), 1.0);
     fragColor.rgb  = vec3(f * (0.75 + iBrightness * 0.3) * orange) * iGlowFactor * 2.2 + starSphere * iGlowFactor +  corona * orange * max(iCoronaFactor, 0.0) + starGlow * orangeRed;
-    fragColor.a	   = length(fragColor.rgb);
+    fragColor.a	   = - 0.25 - dist;
 }
 
 void main() {

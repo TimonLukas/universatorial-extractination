@@ -117,7 +117,7 @@ onMounted(() => {
   const totalTime = ref(0)
   function render(currentTime: number) {
     if (!alive) {
-      console.log('stopping rendering star :(')
+      console.log("stopping rendering star :(")
       return
     }
 

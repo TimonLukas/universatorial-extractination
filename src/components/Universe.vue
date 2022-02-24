@@ -80,7 +80,7 @@ onMounted(async () => {
 
     gl.vertexAttribPointer(positionAttribute, 2, gl.FLOAT, false, 0, 0)
     gl.uniform2f(resolutionAttribute, gl.canvas.width, gl.canvas.height)
-    gl.uniform1f(timeAttribute, currentTime / 1e3)
+    gl.uniform1f(timeAttribute, currentTime / 1e5)
 
     gl.drawArrays(gl.TRIANGLES, 0, 6)
 

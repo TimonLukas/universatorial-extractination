@@ -58,7 +58,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec2 uv = 2.0 * fragCoord.xy / iResolution.xy - 1.0;
     vec2 uvs = uv * iResolution.xy / max(iResolution.x, iResolution.y);
     vec3 p = vec3(uvs / 4.0, 0) + vec3(1.0, -1.3, 0.0);
-    p += 0.2 * vec3(sin(iTime / 160.0), sin(iTime / 120.0),  sin(iTime / 1280.0));
+    p += 0.2 * vec3(sin(iTime / 16.0), sin(iTime / 12.0),  sin(iTime / 128.0));
 
     freqs[0] = smoothPerlin(iTime * 1.0e-4, SMOOTH_PERLIN_PARAMS0);
     freqs[1] = smoothPerlin(iTime * 1.0e-4, SMOOTH_PERLIN_PARAMS1);
@@ -68,7 +68,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     float t = field(p, freqs[2]);
     float v = (1.0 - exp((abs(uv.x) - 1.0) * 6.0)) * (1.0 - exp((abs(uv.y) - 1.0) * 6.0));
 
-    vec3 p2 = vec3(uvs / (4.0 + sin(iTime * 0.011) * 0.2 + 0.2 + sin(iTime * 0.015) * 0.3 + 0.4), 1.5) + vec3(2.0, -1.3, -1.0);
+    vec3 p2 = vec3(uvs / (4.0 + sin(iTime * 0.11) * 0.2 + 0.2 + sin(iTime * 0.15) * 0.3 + 0.4), 1.5) + vec3(2.0, -1.3, -1.0);
     p2 += 0.25 * vec3(sin(iTime / 160.0), sin(iTime / 120.0),  sin(iTime / 1280.0));
     float t2 = field2(p2, freqs[3]);
     vec4 c2 = mix(0.4, 1.0, v) * vec4(1.3 * t2 * t2 * t2, 1.8 * t2 * t2 ,t2 * freqs[0], t2) * freqs[3];

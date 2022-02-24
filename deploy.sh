@@ -3,6 +3,8 @@
 # abort on errors
 set -e
 
+rm -rf dist
+
 git update-index -q --ignore-submodules --refresh
 
 version=$(jq -r .version package.json)
@@ -17,7 +19,7 @@ fi
 # build
 yarn build
 
-yarn build-storybook -o dist/storybook --preview-url=/universatorial-extractination/storybook/iframe.html
+yarn build-storybook -o dist/storybook
 
 # navigate into the build output directory
 cd dist
@@ -29,5 +31,3 @@ git commit -m "Deployment $version ($hash$editEmoji)"
 git push -f git@github.com:TimonLukas/universatorial-extractination.git master:gh-pages
 
 cd ..
-
-rm -rf dist
