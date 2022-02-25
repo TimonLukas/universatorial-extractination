@@ -2,14 +2,13 @@
 .background(:style="{ transform: universeTransformation }"): universe
 .star(:style="{ transform: starTransformation }"): star(:total-radius="0.7" :brightness="0")
 .content
-  router-view(v-slot="{ Component }")
-    keep-alive
-      component(:is="Component")
+  router-view(v-slot="{ Component, route }")
+    transition(name="view-change")
+      component(:is="Component" :key="route.name")
 </template>
 
 <script setup lang="ts">
-import Star from "@/components/Star.vue"
-import Universe from "@/components/Universe.vue"
+import { Star, Universe } from "@/components"
 
 import { GameRoute, useGameRoute } from "@/router"
 import { computed } from "vue"
@@ -39,7 +38,10 @@ const starTransformation = computed(() => {
 })
 </script>
 
+<!--suppress CssUnknownTarget -->
 <style lang="sass">
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap')
+
 body
   margin: 0
   width: 100vw
@@ -47,6 +49,10 @@ body
   background: black
   position: relative
   overflow: hidden
+  font-family: "Nunito", sans-serif
+
+  *
+    box-sizing: border-box
 
   #app > *
     position: absolute
@@ -56,7 +62,7 @@ body
     height: 100%
 
     &.background
-      transition: transform 1.75s
+      transition: transform 1.5s
 
     &.star
       transition: transform 2s ease-out
