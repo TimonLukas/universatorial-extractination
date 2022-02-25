@@ -1,21 +1,30 @@
 <template lang="pug">
 button.ui-button(:class="type")
-  span.icon(v-if="icon"): ui-icon(:name="icon")
+  span.icon(v-if="icon"): ui-icon(:name="transformedIcon")
   slot
 </template>
 
 <script lang="ts" setup>
 import UiIcon from "./UiIcon"
 import type { icons } from "./UiIcon"
+import { computed } from "vue"
 
 type PossibleIcons = keyof typeof icons
-withDefaults(
+const props = withDefaults(
   defineProps<{
     icon?: PossibleIcons
     type?: "primary" | "secondary"
   }>(),
   { type: "primary" }
 )
+
+const pascalToKebap = (str: string) =>
+  str
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z])([A-Z])(?=[a-z])/g, "$1-$2")
+    .toLowerCase()
+
+const transformedIcon = computed(() => pascalToKebap(props.icon || ""))
 </script>
 
 <style lang="sass" scoped>

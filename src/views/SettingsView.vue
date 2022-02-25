@@ -4,13 +4,13 @@
     h1 Settings
     .settings
       .row
-        ui-button(icon="hi-upload") Export save
-        ui-button(icon="hi-download" ) Import save
+        ui-button(icon="HiUpload") Export save
+        ui-button(icon="HiDownload" ) Import save
       .row.gap: ui-slider(type="percentage" v-model="settings.state.volumes.music" label="Music volume" unit="%")
       .row:     ui-slider(type="percentage" v-model="settings.state.volumes.soundEffects" label="Sound effect volume" unit="%")
       .row:     ui-slider(type="percentage" v-model="settings.state.volumes.master" label="Master volume" unit="%")
-      .row.gap: ui-button(icon="hi-document-text") Credits
-      .row:     ui-button(icon="hi-logout" @click="router.push({ name: GameRoute.MAIN })" type="secondary") Close
+      .row.gap: ui-button(icon="HiDocumentText") Credits
+      .row:     ui-button(icon="HiLogout" @click="router.push({ name: GameRoute.MAIN })" type="secondary") Close
 </template>
 
 <script lang="ts" setup>

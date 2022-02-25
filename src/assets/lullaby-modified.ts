@@ -17,7 +17,7 @@ import type { GenerativeSampler } from "@generative-music/utilities"
 import type { GenerativePiece } from "@generative-music/pieces-alex-bainter"
 
 const GAIN_ADJUSTMENT = 5
-const SAMPLE_NAMES = ["vsco2-piano-mf", ["lullaby__explosion", "explosion"]]
+const SAMPLE_NAMES = ["vsco2-piano-mf", "explosion"]
 
 const playProgression = (piano: GenerativeSampler) => {
   piano.triggerAttack("C4", `+${1 + Math.random() * 0.1 - 0.05}`)
