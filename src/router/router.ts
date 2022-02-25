@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router"
+import { createRouter, createWebHashHistory } from "vue-router"
 import * as views from "@/views"
 
 export enum GameRoute {
@@ -9,7 +9,7 @@ export enum GameRoute {
 export const gameRoutes = Object.values(GameRoute)
 
 export const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/",

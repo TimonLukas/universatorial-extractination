@@ -1,18 +1,21 @@
 <template lang="pug">
 .background(:style="{ transform: universeTransformation }"): universe
 .star(:style="{ transform: starTransformation }"): star(:total-radius="0.7" :brightness="0")
-.content
+.content(@click="startMusic")
   router-view(v-slot="{ Component, route }")
     transition(name="view-change")
-      component(:is="Component" :key="route.name")
+      keep-alive
+        component(:is="Component" :key="route.name")
 </template>
 
 <script setup lang="ts">
 import { Star, Universe } from "@/components"
 
 import { GameRoute, useGameRoute } from "@/router"
+import { useSettingsStore } from "@/stores"
 import { computed } from "vue"
 
+const store = useSettingsStore()
 const currentGameRoute = useGameRoute()
 
 const universeTransformation = computed(() => {
@@ -36,6 +39,10 @@ const starTransformation = computed(() => {
 
   return ""
 })
+
+function startMusic() {
+  store.initializeMusic()
+}
 </script>
 
 <!--suppress CssUnknownTarget -->

@@ -3,14 +3,23 @@
   ui-box.settings-box
     h1 Settings
     .settings
-      .row.close: ui-button(@click="router.push({ name: GameRoute.MAIN })") Close
+      .row
+        ui-button(icon="hi-upload") Export save
+        ui-button(icon="hi-download" ) Import save
+      .row.gap: ui-slider(type="percentage" v-model="settings.state.volumes.music" label="Music volume" unit="%")
+      .row:     ui-slider(type="percentage" v-model="settings.state.volumes.soundEffects" label="Sound effect volume" unit="%")
+      .row:     ui-slider(type="percentage" v-model="settings.state.volumes.master" label="Master volume" unit="%")
+      .row.gap: ui-button(icon="hi-document-text") Credits
+      .row:     ui-button(icon="hi-logout" @click="router.push({ name: GameRoute.MAIN })" type="secondary") Close
 </template>
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router"
-import { UiBox, UiButton } from "@/components/ui"
+import { UiBox, UiButton, UiSlider } from "@/components/ui"
 import { GameRoute } from "@/router"
+import { useSettingsStore } from "@/stores"
 
+const settings = useSettingsStore()
 const router = useRouter()
 </script>
 
@@ -33,7 +42,7 @@ const router = useRouter()
       transform: scale(2)
 
   .settings-box
-    width: 30vw
+    width: 40vw
     height: 70vh
     text-align: center
     padding: 2rem 4rem
@@ -48,7 +57,11 @@ const router = useRouter()
 
       .row
         display: flex
+        gap: 2rem
 
-        &.close
+        &:not(:last-child)
+          margin-bottom: 2rem
+
+        &.gap
           margin-top: auto
 </style>
