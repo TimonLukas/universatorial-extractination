@@ -1,6 +1,6 @@
 <template lang="pug">
 .background(:style="{ transform: universeTransformation }"): universe
-.star(:style="{ transform: starTransformation }"): star(:total-radius="0.7" :brightness="0")
+.star(:style="{ transform: starTransformation }"): star(:total-radius="0.5" :brightness="0" :speed-factor="-2")
 .content(@click="startMusic")
   router-view(v-slot="{ Component, route }")
     transition(name="view-change")
@@ -47,7 +47,7 @@ function startMusic() {
 
 <!--suppress CssUnknownTarget -->
 <style lang="sass">
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&family=Red+Hat+Mono:wght@300&display=swap')
 
 body
   margin: 0

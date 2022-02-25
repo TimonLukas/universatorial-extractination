@@ -51,7 +51,7 @@ const router = useRouter()
       margin-bottom: 3rem
 
     .settings
-      height: calc(100% - 6rem)
+      height: calc(100% - 8.5rem)
       display: flex
       flex-direction: column
 

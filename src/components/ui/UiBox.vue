@@ -54,5 +54,5 @@ import UiBoxBorder from "./UiBoxBorder.vue"
   .content
     z-index: 1
     color: #DDDDDD
-    height: calc(100% - 2.5rem)
+    height: 100%
 </style>
