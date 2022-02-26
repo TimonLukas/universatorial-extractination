@@ -27,6 +27,7 @@
           .row.gap: ui-slider(type="percentage" v-model="settings.state.volumes.music" label="Music volume" unit="%")
           .row:     ui-slider(type="percentage" v-model="settings.state.volumes.soundEffects" label="Sound effect volume" unit="%")
           .row:     ui-slider(type="percentage" v-model="settings.state.volumes.master" label="Master volume" unit="%")
+          .row:     ui-slider(type="percentage" v-model="settings.state.shaderSuperSamplingFactor" label="Shader supersampling" unit="%" :min=".5" :max="1.5")
           .row.gap: ui-button(icon="HiDocumentText" @click="showCredits = true") Credits
           .row:     ui-button(icon="HiLogout" @click="router.push({ name: GameRoute.MAIN })" type="secondary") Close
 </template>

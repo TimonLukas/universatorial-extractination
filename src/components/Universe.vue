@@ -1,5 +1,5 @@
 <template lang="pug">
-canvas(ref="canvas" :width="width" :height="height")
+canvas(ref="canvas" :width="width * uiStore.state.shaderSuperSamplingFactor" :height="height * uiStore.state.shaderSuperSamplingFactor")
 </template>
 
 <script lang="ts" setup>
@@ -9,9 +9,12 @@ import { useElementSize } from "@vueuse/core"
 import { createShaderProgram } from "@/lib/shader"
 import fragmentShader from "@/assets/universe-shader-fragment.glsl?raw"
 import vertexShader from "@/assets/universe-shader-vertex.glsl?raw"
+import { useSettingsStore } from "@/stores"
 
 const canvas = ref<HTMLCanvasElement>()
 const { width, height } = useElementSize(canvas)
+
+const uiStore = useSettingsStore()
 
 onMounted(async () => {
   let alive = true

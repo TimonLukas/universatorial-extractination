@@ -1,5 +1,9 @@
 <template lang="pug">
-canvas(ref="canvas" :width="width" :height="height")
+canvas(
+  ref="canvas"
+  :width="width * uiStore.state.shaderSuperSamplingFactor"
+  :height="height * uiStore.state.shaderSuperSamplingFactor"
+)
 </template>
 
 <script lang="ts" setup>
@@ -11,11 +15,14 @@ import fragmentShader from "@/assets/star-shader-fragment.glsl?raw"
 import vertexShader from "@/assets/star-shader-vertex.glsl?raw"
 import sunTexturePath from "@/assets/texture-sun.jpg"
 import { fetchImage } from "@/lib/image"
+import { useSettingsStore } from "@/stores"
 
 const canvas = ref<HTMLCanvasElement>()
 const { width, height } = useElementSize(canvas)
 
 const sunTexture = ref<HTMLImageElement>()
+
+const uiStore = useSettingsStore()
 
 const props = withDefaults(
   defineProps<{
@@ -131,7 +138,7 @@ onMounted(() => {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 
     gl.vertexAttribPointer(positionAttribute, 2, gl.FLOAT, false, 0, 0)
-    gl.uniform2f(resolutionAttribute, width.value, height.value)
+    gl.uniform2f(resolutionAttribute, gl.canvas.width, gl.canvas.height)
     gl.uniform1f(timeAttribute, unref(totalTime) / 1e3)
     gl.uniform1i(textureAttribute, 0)
     gl.uniform1f(brightnessAttribute, props.brightness)

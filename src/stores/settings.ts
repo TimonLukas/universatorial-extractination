@@ -10,7 +10,30 @@ const initialState = {
     soundEffects: 1,
     master: 1,
   },
+  shaderSuperSamplingFactor: 1,
 }
+
+export const useSettingsStore = defineStore("settings", () => {
+  const settingsLocalStorage = useLocalStorage("settings", initialState)
+  const state = reactive(settingsLocalStorage.value)
+
+  watch(
+    state,
+    useDebounceFn(() => {
+      settingsLocalStorage.value = state
+    }, 1000)
+  )
+
+  let isInitialized = false
+  function initializeMusic() {
+    if (!isInitialized) {
+      start().then(() => useMusicSettings(state))
+      isInitialized = true
+    }
+  }
+
+  return { state, initializeMusic }
+})
 
 async function useMusicSettings(state: typeof initialState) {
   const nodes = useVolumeNodes()
@@ -37,25 +60,3 @@ async function useMusicSettings(state: typeof initialState) {
     { immediate: true }
   )
 }
-
-export const useSettingsStore = defineStore("settings", () => {
-  const settingsLocalStorage = useLocalStorage("settings", initialState)
-  const state = reactive(settingsLocalStorage.value)
-
-  watch(
-    state,
-    useDebounceFn(() => {
-      settingsLocalStorage.value = state
-    }, 1000)
-  )
-
-  let isInitialized = false
-  function initializeMusic() {
-    if (!isInitialized) {
-      start().then(() => useMusicSettings(state))
-      isInitialized = true
-    }
-  }
-
-  return { state, initializeMusic }
-})
