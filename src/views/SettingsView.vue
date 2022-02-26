@@ -55,6 +55,7 @@ const router = useRouter()
   &.view-change
     &-enter-active
       transition: opacity .75s, transform 1s ease-out
+      transition-delay: .25s
 
     &-leave-active
       transition: opacity .75s, transform 1s ease-in

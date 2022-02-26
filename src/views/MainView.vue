@@ -21,12 +21,21 @@
       template(v-slot:content)
         ui-content-switcher-tab-box(:opacity=".75")
         ui-content-switcher-tab-box(:opacity=".75")
-    button.settings(@click="$router.push({ name: GameRoute.SETTINGS })") Go to settings
+    ui-icon.settings(
+      name="io-settings"
+      @click="$router.push({ name: GameRoute.SETTINGS })"
+      fill="white"
+      animation="spin"
+      speed="slow"
+      :hover="true"
+      :scale="3"
+      title="Settings"
+    )
 </template>
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router"
-import { GameRoute, useIsInRouteChange, useRoutes } from "@/router"
+import { GameRoute, useIsInRouteChange } from "@/router"
 import { UiBox, UiIcon, UiContentSwitcherBox } from "@/components/ui"
 import UiContentSwitcherTab from "@/components/ui/box/UiContentSwitcherTab.vue"
 import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox.vue"
@@ -53,7 +62,7 @@ const contentSwitcherIndex = ref(0)
 </script>
 
 <style lang="sass" scoped>
-.view
+.view.main
   &.to-settings, &.from-settings
     &.view-change
       &-enter-from, &-leave-to
@@ -66,7 +75,7 @@ const contentSwitcherIndex = ref(0)
 
   transition: transform 1s ease-out, opacity 1s ease-out
 
-  .ui
+  > .ui
     position: absolute
     left: 0
     top: 0
@@ -107,8 +116,9 @@ const contentSwitcherIndex = ref(0)
       .tabs svg
         opacity: .75
 
-    button.settings
+    > .settings
       position: absolute
       bottom: 1rem
       left: 1rem
+      cursor: pointer
 </style>

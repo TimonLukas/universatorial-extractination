@@ -9,6 +9,7 @@ import {
   HiLightningBolt,
   HiChip,
   HiChevronLeft,
+  IoSettings,
 } from "oh-vue-icons/icons"
 
 export const icons = {
@@ -21,6 +22,7 @@ export const icons = {
   HiLightningBolt,
   HiChip,
   HiChevronLeft,
+  IoSettings,
 }
 
 addIcons(...Object.values(icons))
