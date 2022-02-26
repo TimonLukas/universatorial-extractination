@@ -43,13 +43,13 @@ vec3 nrand3(vec2 co) {
     return c;
 }
 
-#define SMOOTH_PERLIN_PARAMS0   2.0,  4.0,  8.0, 16.0, 32.0, 64.0
-#define SMOOTH_PERLIN_PARAMS1   3.0,  3.0,  3.0,  6.0, 10.0, 50.0
-#define SMOOTH_PERLIN_PARAMS2  50.0, 10.0,  6.0,  3.0,  3.0,  3.0
-#define SMOOTH_PERLIN_PARAMS3  60.0, 60.0,  3.0,  3.0,  8.0,  9.0
+#define SMOOTH_NOISE_PARAMS0   2.0,  4.0,  8.0, 16.0, 32.0, 64.0
+#define SMOOTH_NOISE_PARAMS1   3.0,  3.0,  3.0,  6.0, 10.0, 50.0
+#define SMOOTH_NOISE_PARAMS2  50.0, 10.0,  6.0,  3.0,  3.0,  3.0
+#define SMOOTH_NOISE_PARAMS3  60.0, 15.0,  3.0,  3.0,  8.0,  9.0
 
-float smoothPerlin(float offset, float a, float b, float c, float d, float e, float f) {
-    return (sin(offset * a) * b + tan(offset * c) * d + cos(offset * e) * f) / (b + d + f);
+float smoothNoise(float offset, float a, float b, float c, float d, float e, float f) {
+    return cos(offset) * (sin(offset * a) * b + tan(offset * c) * d + cos(offset * e) * f) / (b + d + f);
 }
 
 float freqs[4];
@@ -60,10 +60,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec3 p = vec3(uvs / 4.0, 0) + vec3(1.0, -1.3, 0.0);
     p += 0.2 * vec3(sin(iTime / 16.0), sin(iTime / 12.0),  sin(iTime / 128.0));
 
-    freqs[0] = smoothPerlin(iTime * 1.0e-4, SMOOTH_PERLIN_PARAMS0);
-    freqs[1] = smoothPerlin(iTime * 1.0e-4, SMOOTH_PERLIN_PARAMS1);
-    freqs[2] = smoothPerlin(iTime * 1.0e-4, SMOOTH_PERLIN_PARAMS2);
-    freqs[3] = smoothPerlin(iTime * 1.0e-4, SMOOTH_PERLIN_PARAMS3);
+    freqs[0] = smoothNoise(iTime * 1.0e-3, SMOOTH_NOISE_PARAMS0);
+    freqs[1] = smoothNoise(iTime * 1.0e-3, SMOOTH_NOISE_PARAMS1);
+    freqs[2] = smoothNoise(iTime * 1.0e-3, SMOOTH_NOISE_PARAMS2);
+    freqs[3] = smoothNoise(iTime * 1.0e-3, SMOOTH_NOISE_PARAMS3);
 
     float t = field(p, freqs[2]);
     float v = (1.0 - exp((abs(uv.x) - 1.0) * 6.0)) * (1.0 - exp((abs(uv.y) - 1.0) * 6.0));

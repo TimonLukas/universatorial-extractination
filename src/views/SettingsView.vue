@@ -1,6 +1,6 @@
 <template lang="pug">
 .view
-  ui-box.settings-box
+  ui-box(:opacity=".9").settings-box
     h1 Settings
     .settings
       .row

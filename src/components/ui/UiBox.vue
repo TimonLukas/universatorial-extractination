@@ -1,6 +1,6 @@
 <template lang="pug">
 .ui-box
-  .border
+  .border(:style="{ opacity }")
     ui-box-border.top.left
     ui-box-border.top.right
     ui-box-border.bottom.left
@@ -9,17 +9,15 @@
 </template>
 
 <script lang="ts" setup>
-import UiBoxBorder from "./UiBoxBorder.vue"
+import UiBoxBorder from "./box/UiBoxBorder.vue"
+
+withDefaults(defineProps<{ opacity: number }>(), { opacity: 1 })
 </script>
 
 <style lang="sass" scoped>
 .ui-box
-  background: #222222
-  border: 1px solid #444444
   padding: 2rem
   position: relative
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.75), 0 0 15px black
-  border-radius: 4px
   min-height: 5rem
 
   .border
@@ -30,6 +28,11 @@ import UiBoxBorder from "./UiBoxBorder.vue"
     height: 100%
     overflow: hidden
     pointer-events: none
+    background: #222222
+    border: 1px solid #444444
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.75), 0 0 15px black
+    border-radius: 4px
+    z-index: -1
 
     > *
       width: calc(50% - 1rem)

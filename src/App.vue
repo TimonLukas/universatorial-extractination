@@ -9,10 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import { Star, Universe } from "@/components"
-
 import { GameRoute, useGameRoute } from "@/router"
 import { useSettingsStore } from "@/stores"
+import { Universe, Star } from "@/components"
 import { computed } from "vue"
 
 const store = useSettingsStore()
@@ -72,7 +71,7 @@ body
       transition: transform 1.5s
 
     &.star
-      transition: transform 2s ease-out
+      transition: transform 1s ease-out
       z-index: 1
 
     &.content

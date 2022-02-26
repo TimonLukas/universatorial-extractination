@@ -1,7 +1,7 @@
 <template lang="pug">
-.view
+.view.main(:class="transitionClass")
   .ui
-    ui-box.top
+    ui-box(:opacity=".75").top
       .resources
         .column
           .row
@@ -10,20 +10,62 @@
           .row
             ui-icon(name="hi-solid-chip" fill="cyan" :scale="1.5")
             span.number 0.01
-    ui-box.right
+    ui-content-switcher-box.right(:index="contentSwitcherIndex")
+      template(v-slot:tabs)
+        ui-content-switcher-tab(@click="contentSwitcherIndex = 0" :active="contentSwitcherIndex === 0")
+          ui-icon(v-if="isPowerUpgradeAvailable" name="hi-solid-lightning-bolt" fill="yellow" :scale="2")
+          ui-icon(v-else name="hi-lightning-bolt" fill="yellow" :scale="2")
+        ui-content-switcher-tab(@click="contentSwitcherIndex = 1" :active="contentSwitcherIndex === 1")
+          ui-icon(v-if="isMindUpgradeAvailable" name="hi-solid-chip" fill="cyan" :scale="2")
+          ui-icon(v-else name="hi-chip" fill="cyan" :scale="2")
+      template(v-slot:content)
+        ui-content-switcher-tab-box(:opacity=".75")
+        ui-content-switcher-tab-box(:opacity=".75")
     button.settings(@click="$router.push({ name: GameRoute.SETTINGS })") Go to settings
 </template>
 
 <script lang="ts" setup>
 import { useRouter } from "vue-router"
-import { GameRoute } from "@/router"
-import { UiBox, UiIcon } from "@/components/ui"
+import { GameRoute, useIsInRouteChange, useRoutes } from "@/router"
+import { UiBox, UiIcon, UiContentSwitcherBox } from "@/components/ui"
+import UiContentSwitcherTab from "@/components/ui/box/UiContentSwitcherTab.vue"
+import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox.vue"
+import { computed, ref } from "vue"
+
+const isInRouteChangeToSettings = useIsInRouteChange(
+  GameRoute.MAIN,
+  GameRoute.SETTINGS
+)
+const isInRouteChangeFromSettings = useIsInRouteChange(
+  GameRoute.SETTINGS,
+  GameRoute.MAIN
+)
+const transitionClass = computed(() => ({
+  "to-settings": isInRouteChangeToSettings.value,
+  "from-settings": isInRouteChangeFromSettings.value,
+}))
+
+const isPowerUpgradeAvailable = ref(true)
+const isMindUpgradeAvailable = ref(true)
 
 const router = useRouter()
+const contentSwitcherIndex = ref(0)
 </script>
 
 <style lang="sass" scoped>
 .view
+  &.to-settings, &.from-settings
+    &.view-change
+      &-enter-from, &-leave-to
+        transform: scale(0.5)
+        opacity: 0
+
+      &-enter-active
+        transition-delay: .25s
+        transition-duration: .75s
+
+  transition: transform 1s ease-out, opacity 1s ease-out
+
   .ui
     position: absolute
     left: 0
@@ -46,20 +88,24 @@ const router = useRouter()
       position: absolute
       top: 1rem
       left: 1rem
-      width: calc(75vw - 1.5rem)
+      width: calc(75vw - 1.75rem)
       height: 15vh
       display: flex
       flex-direction: row
 
       .resources
         height: 100%
+        padding-left: 1rem
 
     .right
       position: absolute
       top: 1rem
       right: 1rem
-      width: calc(25vw - 1.5rem)
+      width: calc(25vw - 1.75rem)
       height: calc(100vh - 2rem)
+
+      .tabs svg
+        opacity: .75
 
     button.settings
       position: absolute
