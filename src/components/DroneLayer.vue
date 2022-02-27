@@ -61,15 +61,16 @@ onMounted(() => {
     // render drones
     ctx.fillStyle = "black"
     game?.state.droneLifetimes.forEach((remainingLifetime) => {
-      const angle = (0.5 * (15_000 - remainingLifetime)) / 1000
+      const angle = -(0.5 * (15_000 - remainingLifetime)) / 1000
       const radiusFraction = Math.min(
         Math.tanh(remainingLifetime / 15_000) + 0.25,
         1
       )
 
       ctx.fillRect(
-        (SUN_RADIUS * 2 - SUN_RADIUS * radiusFraction) * width.value,
-        0.5 * height.value,
+        (0.5 - Math.cos(angle) * SUN_RADIUS * radiusFraction) * width.value,
+        0.5 * height.value -
+          Math.sin(angle) * SUN_RADIUS * radiusFraction * width.value,
         3,
         3
       )

@@ -15,9 +15,9 @@
               span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.THOUGHTS] || 0) }}/s)
         .drones
           .name Drones
-          .amount Currently active: {{ game.state.generators[GeneratorNames.DRONE].bought }}
-          ui-button(@click="buyDrone(game.state, game.prices)" :disabled="game.state.currencies[Currency.ENERGY] < game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]")
-            | Buy drone for {{ format(game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]) }}
+          .amount Currently active: {{ game?.state.generators[GeneratorNames.DRONE].bought || 0 }}
+          ui-button(@click="game && buyDrone(game.state, game.prices)" :disabled="!game || game.state.currencies[Currency.ENERGY] < game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]")
+            | Buy drone for {{ game && format(game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]) }}
             ui-icon(name="hi-solid-lightning-bolt" fill="yellow")
     ui-content-switcher-box.right(:index="contentSwitcherIndex")
       template(v-slot:tabs)
