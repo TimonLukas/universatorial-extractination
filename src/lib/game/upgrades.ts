@@ -6,6 +6,7 @@ import type { Currency } from "./currency"
 export enum UpgradeId {
   _001_START_THINKING,
   _002_INITIAL_ENERGY,
+  _003_DRONE_EFFICIENCY,
 }
 
 type Targeting =

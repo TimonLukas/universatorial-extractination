@@ -31,6 +31,7 @@ defineProps<{ upgrade: Upgrade }>()
   flex-direction: row
   display: flex
   justify-content: space-between
+  margin-bottom: 1rem
 
   .content
     display: flex

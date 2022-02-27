@@ -56,7 +56,7 @@ const reduceUpgradeIterator = (
       if (type === "base") {
         value += upgrade.value
       } else if (type === "multiplier") {
-        value += upgrade.value
+        value *= upgrade.value
       }
     }
   }

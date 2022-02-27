@@ -1,7 +1,8 @@
 import { Currency } from "../currency"
-import { UpgradeId } from "../upgrades"
 import type { Upgrade } from "../upgrades"
+import { UpgradeId } from "../upgrades"
 import { fromEntries } from "@/lib/object"
+import { GeneratorNames } from "@/lib/game/generators"
 
 export const upgrades: Upgrade[] = [
   {
@@ -32,6 +33,23 @@ export const upgrades: Upgrade[] = [
     targetType: "total",
     target: Currency.ENERGY,
     value: 0.1,
+  },
+  {
+    id: UpgradeId._003_DRONE_EFFICIENCY,
+    category: Currency.THOUGHTS,
+    name: "Drone efficiency",
+    description: "Better drones!",
+    type: "multiplier",
+    revealAfter: [{ currency: Currency.THOUGHTS, amount: 2.5 }],
+    baseCost: [
+      {
+        currency: Currency.THOUGHTS,
+        amount: 5,
+      },
+    ],
+    targetType: "generator",
+    target: GeneratorNames.DRONE,
+    value: 2,
   },
 ]
 

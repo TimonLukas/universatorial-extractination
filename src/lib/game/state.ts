@@ -19,7 +19,7 @@ export type GameState = {
 
 export const initialize = (): GameState => ({
   currencies: {
-    [Currency.ENERGY]: 0,
+    [Currency.ENERGY]: 20,
     [Currency.THOUGHTS]: 0,
   },
   generators: {

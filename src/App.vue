@@ -1,5 +1,7 @@
 <template lang="pug">
-.background(:style="{ transform: universeTransformation }"): universe
+.background(:style="{ transform: universeTransformation }")
+  universe
+drone-layer
 .star(:style="{ transform: starTransformation }"): star(:total-radius="0.5" :brightness="0" :speed-factor="-2")
 .content(@click="startMusic")
   router-view(v-slot="{ Component, route }")
@@ -11,7 +13,7 @@
 <script setup lang="ts">
 import { GameRoute, useGameRoute } from "@/router"
 import { useSettingsStore } from "@/stores"
-import { Universe, Star } from "@/components"
+import { Universe, Star, DroneLayer } from "@/components"
 import { computed, provide } from "vue"
 import useGame from "@/lib/game"
 import { GAME_PROVIDE_KEY } from "@/constants"
@@ -74,6 +76,13 @@ body
 
     &.background
       transition: transform 1.5s
+
+      > *
+        position: absolute
+        left: 0
+        top: 0
+        width: 100%
+        height: 100%
 
     &.star
       transition: transform 1s ease-out

@@ -64,7 +64,7 @@ $gradient5: linear-gradient(to left,  var(--border-color) 0%,  var(--border-colo
     --transition-direction: 1
 
   &:disabled
-    background: #222222
+    background: #111111
     box-shadow: 0 .15rem 10px rgba(0, 0, 0, 0.75)
     cursor: not-allowed
 
