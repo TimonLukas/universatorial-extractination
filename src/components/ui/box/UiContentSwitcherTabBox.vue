@@ -1,5 +1,5 @@
 <template lang="pug">
-ui-box(:opacity="opacity" ref="box").ui-content-switcher-tab-box
+ui-box(:opacity="opacity" ref="box").ui-content-switcher-tab-box: slot
 </template>
 
 <script lang="ts" setup>

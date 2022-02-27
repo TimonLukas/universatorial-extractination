@@ -58,4 +58,5 @@ withDefaults(defineProps<{ opacity: number }>(), { opacity: 1 })
     z-index: 1
     color: #DDDDDD
     height: 100%
+    width: 100%
 </style>

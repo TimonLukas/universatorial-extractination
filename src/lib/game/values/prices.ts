@@ -1,6 +1,7 @@
 import type { GameValue } from "../types"
 import type { GameState } from "../state"
-import { generatorNames, generators } from "@/lib/game/generators"
+import { generatorNames } from "../generators"
+import { generators } from "../data"
 import { computed, unref } from "vue"
 import { fromEntries } from "@/lib/object"
 import type { AllCosts } from "@/lib/game/cost"
@@ -28,7 +29,7 @@ export const usePrices = (state: GameState): Prices => ({
           ])
         ),
         currencies,
-        1
+        0
       ),
     ])
   ),

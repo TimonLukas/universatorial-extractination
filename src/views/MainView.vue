@@ -22,7 +22,19 @@
           ui-icon(v-else name="hi-chip" fill="cyan" :scale="2")
       template(v-slot:content)
         ui-content-switcher-tab-box(:opacity=".75")
+          upgrade-tile(
+            v-for="upgrade in game.upgrades.revealedUpgrades.filter(upgrade => upgrade.category === 'energy')"
+            :key="upgrade.id"
+            :upgrade="upgrade"
+            @click="buyUpgrade(game.state, upgrade.id)"
+          )
         ui-content-switcher-tab-box(:opacity=".75")
+          upgrade-tile(
+            v-for="upgrade in game.upgrades.revealedUpgrades.filter(upgrade => upgrade.category === 'thought')"
+            :key="upgrade.id"
+            :upgrade="upgrade"
+            @click="buyUpgrade(game.state, upgrade.id)"
+          )
     ui-icon.settings(
       name="io-settings"
       @click="$router.push({ name: GameRoute.SETTINGS })"
@@ -38,12 +50,14 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router"
 import { GameRoute, useIsInRouteChange } from "@/router"
+import { UpgradeTile } from "@/components"
 import { UiBox, UiIcon, UiContentSwitcherBox } from "@/components/ui"
 import UiContentSwitcherTab from "@/components/ui/box/UiContentSwitcherTab.vue"
 import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox.vue"
 import { computed, inject, ref } from "vue"
 import { GAME_PROVIDE_KEY } from "@/constants"
 import type { Game } from "@/lib/game"
+import { buyUpgrade } from "@/lib/game"
 import { format } from "@/lib/formatter"
 
 const isInRouteChangeToSettings = useIsInRouteChange(

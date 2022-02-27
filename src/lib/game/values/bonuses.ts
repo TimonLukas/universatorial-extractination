@@ -1,8 +1,8 @@
 import type { GameState } from "../state"
-import type { GameValue } from "@/lib/game/types"
+import type { GameValue } from "../types"
 import type { ComputedRef } from "vue"
 import { fromEntries } from "@/lib/object"
-import { generatorNames } from "@/lib/game/generators"
+import { generatorNames } from "../generators"
 import { computed } from "vue"
 
 export type GeneratorBonuses = GameValue<ComputedRef<number>, "generators">

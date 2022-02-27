@@ -46,7 +46,7 @@ $gradient5: linear-gradient(to left,  var(--border-color) 0%,  var(--border-colo
   flex-grow: 1
   cursor: pointer
   transition: background var(--transition-duration)
-  box-shadow: 0 .15rem 10px rgba(0, 0, 0, 0.75)
+  box-shadow: 0 .15rem 10px rgba(0, 0, 0, 0.75), inset 0 0 10px rgba(0, 0, 0, 0.6)
   font-family: "Nunito", sans-serif
   font-size: 1rem
 
@@ -63,6 +63,11 @@ $gradient5: linear-gradient(to left,  var(--border-color) 0%,  var(--border-colo
     --hover-background-color: #666666
     --transition-direction: 1
 
+  &:disabled
+    background: #222222
+    box-shadow: 0 .15rem 10px rgba(0, 0, 0, 0.75)
+    cursor: not-allowed
+
   &:before
     filter: blur(2px)
     content: ""
@@ -78,7 +83,7 @@ $gradient5: linear-gradient(to left,  var(--border-color) 0%,  var(--border-colo
     transform: scaleX(0) rotate(calc(var(--transition-direction) * 180deg))
     transition: transform var(--transition-duration) ease-in-out calc(var(--transition-duration) * 2), background-position var(--transition-duration) ease-in-out var(--transition-duration), background-size var(--transition-duration) ease-in-out 0s
 
-  &:hover
+  &:not(:disabled):hover
     background: var(--hover-background-color)
 
     &:before

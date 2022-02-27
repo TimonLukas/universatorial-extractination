@@ -5,6 +5,9 @@ import { useGeneratorBonuses } from "./bonuses"
 import type { GeneratorBonuses } from "./bonuses"
 import { useProductions } from "./productions"
 import type { GeneratorProductions, TotalProductions } from "./productions"
+import { useUpgrades } from "./upgrades"
+import type { Upgrade } from "../upgrades"
+import type { MaybeRef } from "@vueuse/core"
 
 export const useValues = (
   state: GameState
@@ -13,6 +16,10 @@ export const useValues = (
   bonuses: GeneratorBonuses
   generatorProductions: GeneratorProductions
   totalProductions: TotalProductions
+  upgrades: {
+    buyableUpgrades: MaybeRef<Upgrade[]>
+    revealedUpgrades: MaybeRef<Upgrade[]>
+  }
 } => {
   const prices = usePrices(state)
   const bonuses = useGeneratorBonuses(state)
@@ -20,11 +27,13 @@ export const useValues = (
     state,
     bonuses
   )
+  const upgrades = useUpgrades(state)
 
   return {
     prices,
     bonuses,
     generatorProductions,
     totalProductions,
+    upgrades,
   }
 }

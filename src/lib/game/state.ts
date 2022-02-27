@@ -2,7 +2,8 @@ import type { MaybeRef } from "@vueuse/core"
 
 import { Currency } from "./currency"
 import type { GeneratorNames } from "./generators"
-import { UpgradeId } from "./upgrades"
+import type { Upgrade } from "./upgrades"
+import { upgradesById } from "@/lib/game/data"
 
 type MaybeNumber = MaybeRef<number>
 
@@ -12,8 +13,8 @@ export type GameState = {
     GeneratorNames,
     { bought: MaybeNumber; generated: MaybeNumber }
   >
-  upgradesBought: Record<UpgradeId, boolean>
-  upgradesRevealed: Record<UpgradeId, boolean>
+  upgradesBought: Set<Upgrade>
+  upgradesRevealed: Set<Upgrade>
 }
 
 export const initialize = (): GameState => ({
@@ -27,10 +28,6 @@ export const initialize = (): GameState => ({
       generated: 0,
     },
   },
-  upgradesBought: {
-    [UpgradeId._01INITIAL_ENERGY]: false,
-  },
-  upgradesRevealed: {
-    [UpgradeId._01INITIAL_ENERGY]: false,
-  },
+  upgradesBought: new Set(),
+  upgradesRevealed: new Set(),
 })

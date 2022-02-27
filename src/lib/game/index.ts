@@ -8,7 +8,7 @@ import { generatorNames } from "@/lib/game/generators"
 
 const createGame = (): { state: GameState } & ReturnType<typeof useValues> => {
   const state = reactive<GameState>(initialize())
-  const { prices, bonuses, generatorProductions, totalProductions } =
+  const { prices, bonuses, generatorProductions, totalProductions, upgrades } =
     useValues(state)
 
   let lastUpdateExecution = Date.now()
@@ -36,9 +36,11 @@ const createGame = (): { state: GameState } & ReturnType<typeof useValues> => {
     bonuses,
     generatorProductions,
     totalProductions,
+    upgrades,
   }
 }
 
 export default useMemoize(createGame)
+export * from "./actions"
 
 export type Game = ReturnType<typeof createGame>
