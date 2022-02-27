@@ -12,10 +12,15 @@
 import { GameRoute, useGameRoute } from "@/router"
 import { useSettingsStore } from "@/stores"
 import { Universe, Star } from "@/components"
-import { computed } from "vue"
+import { computed, provide } from "vue"
+import useGame from "@/lib/game"
+import { GAME_PROVIDE_KEY } from "@/constants"
 
 const store = useSettingsStore()
 const currentGameRoute = useGameRoute()
+
+const game = useGame()
+provide(GAME_PROVIDE_KEY, game)
 
 const universeTransformation = computed(() => {
   switch (currentGameRoute.value) {

@@ -5,11 +5,11 @@
       .resources
         .column
           .row
-            ui-icon(name="hi-solid-lightning-bolt" fill="yellow" :scale="1.5")
-            span.number 0.01
+            ui-icon(name="hi-solid-lightning-bolt" title="Energy" fill="yellow" :scale="1.5")
+            span.number {{ game.state.currencies.energy }}
           .row
-            ui-icon(name="hi-solid-chip" fill="cyan" :scale="1.5")
-            span.number 0.01
+            ui-icon(name="hi-solid-chip" title="Thoughts" fill="cyan" :scale="1.5")
+            span.number {{ game.state.currencies.thought }}
     ui-content-switcher-box.right(:index="contentSwitcherIndex")
       template(v-slot:tabs)
         ui-content-switcher-tab(@click="contentSwitcherIndex = 0" :active="contentSwitcherIndex === 0")
@@ -39,7 +39,9 @@ import { GameRoute, useIsInRouteChange } from "@/router"
 import { UiBox, UiIcon, UiContentSwitcherBox } from "@/components/ui"
 import UiContentSwitcherTab from "@/components/ui/box/UiContentSwitcherTab.vue"
 import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox.vue"
-import { computed, ref } from "vue"
+import { computed, inject, ref } from "vue"
+import { GAME_PROVIDE_KEY } from "@/constants"
+import type { Game } from "@/lib/game"
 
 const isInRouteChangeToSettings = useIsInRouteChange(
   GameRoute.MAIN,
@@ -59,6 +61,8 @@ const isMindUpgradeAvailable = ref(true)
 
 const router = useRouter()
 const contentSwitcherIndex = ref(0)
+
+const game = inject<Game>(GAME_PROVIDE_KEY)
 </script>
 
 <style lang="sass" scoped>
@@ -73,7 +77,7 @@ const contentSwitcherIndex = ref(0)
         transition-delay: .25s
         transition-duration: .75s
 
-  transition: transform 1s ease-out, opacity 1s ease-out
+    transition: transform 1s ease-out, opacity 1s ease-out
 
   > .ui
     position: absolute
@@ -121,4 +125,5 @@ const contentSwitcherIndex = ref(0)
       bottom: 1rem
       left: 1rem
       cursor: pointer
+      filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 1px black)
 </style>
