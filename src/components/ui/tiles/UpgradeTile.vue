@@ -1,5 +1,5 @@
 <template lang="pug">
-ui-button.upgrade-tile(:disabled="game ? !xunref(game.upgrades.buyableUpgrades).includes(upgrade) : false")
+ui-button.upgrade-tile(:disabled="game ? !unref(game.upgrades.buyableUpgrades).includes(upgrade) : false")
   .content
     .name {{ upgrade.name }}
     .description {{ upgrade.description }}
