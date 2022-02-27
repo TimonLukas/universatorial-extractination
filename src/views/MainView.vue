@@ -15,22 +15,22 @@
     ui-content-switcher-box.right(:index="contentSwitcherIndex")
       template(v-slot:tabs)
         ui-content-switcher-tab(@click="contentSwitcherIndex = 0" :active="contentSwitcherIndex === 0")
-          ui-icon(v-if="isPowerUpgradeAvailable" name="hi-solid-lightning-bolt" fill="yellow" :scale="2")
+          ui-icon(v-if="revealedUpgrades.energy.value.length > 0" name="hi-solid-lightning-bolt" fill="yellow" :scale="2")
           ui-icon(v-else name="hi-lightning-bolt" fill="yellow" :scale="2")
         ui-content-switcher-tab(@click="contentSwitcherIndex = 1" :active="contentSwitcherIndex === 1")
-          ui-icon(v-if="isMindUpgradeAvailable" name="hi-solid-chip" fill="cyan" :scale="2")
+          ui-icon(v-if="revealedUpgrades.thought.value.length > 0" name="hi-solid-chip" fill="cyan" :scale="2")
           ui-icon(v-else name="hi-chip" fill="cyan" :scale="2")
       template(v-slot:content)
         ui-content-switcher-tab-box(:opacity=".75")
           upgrade-tile(
-            v-for="upgrade in game.upgrades.revealedUpgrades.filter(upgrade => upgrade.category === 'energy')"
+            v-for="upgrade in revealedUpgrades.energy.value"
             :key="upgrade.id"
             :upgrade="upgrade"
             @click="buyUpgrade(game.state, upgrade.id)"
           )
         ui-content-switcher-tab-box(:opacity=".75")
           upgrade-tile(
-            v-for="upgrade in game.upgrades.revealedUpgrades.filter(upgrade => upgrade.category === 'thought')"
+            v-for="upgrade in revealedUpgrades.thought.value"
             :key="upgrade.id"
             :upgrade="upgrade"
             @click="buyUpgrade(game.state, upgrade.id)"
@@ -54,7 +54,7 @@ import { UpgradeTile } from "@/components"
 import { UiBox, UiIcon, UiContentSwitcherBox } from "@/components/ui"
 import UiContentSwitcherTab from "@/components/ui/box/UiContentSwitcherTab.vue"
 import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox.vue"
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, unref } from "vue"
 import { GAME_PROVIDE_KEY } from "@/constants"
 import type { Game } from "@/lib/game"
 import { buyUpgrade } from "@/lib/game"
@@ -73,13 +73,26 @@ const transitionClass = computed(() => ({
   "from-settings": isInRouteChangeFromSettings.value,
 }))
 
-const isPowerUpgradeAvailable = ref(true)
-const isMindUpgradeAvailable = ref(true)
-
 const router = useRouter()
 const contentSwitcherIndex = ref(0)
 
 const game = inject<Game>(GAME_PROVIDE_KEY)
+const revealedUpgrades = {
+  energy: computed(() =>
+    game
+      ? unref(game.upgrades.revealedUpgrades).filter(
+          (upgrade) => upgrade.category === "energy"
+        )
+      : []
+  ),
+  thought: computed(() =>
+    game
+      ? unref(game.upgrades.revealedUpgrades).filter(
+          (upgrade) => upgrade.category === "thought"
+        )
+      : []
+  ),
+}
 </script>
 
 <style lang="sass" scoped>
