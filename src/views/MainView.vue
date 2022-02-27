@@ -6,12 +6,12 @@
         .column
           .row
             ui-icon(name="hi-solid-lightning-bolt" title="Energy" fill="yellow" :scale="1.5")
-            span.number {{ format(game.state.currencies.energy) }}
-            span.number.per-second ({{ format(game.totalProductions.currencies.energy) }}/s)
+            span.number {{ format(game?.state.currencies.energy || 0) }}
+            span.number.per-second ({{ format(game?.totalProductions.currencies.energy || 0) }}/s)
           .row
             ui-icon(name="hi-solid-chip" title="Thoughts" fill="cyan" :scale="1.5")
-            span.number {{ format(game.state.currencies.thought) }}
-            span.number.per-second ({{ format(game.totalProductions.currencies.thought) }}/s)
+            span.number {{ format(game?.state.currencies.thought || 0) }}
+            span.number.per-second ({{ format(game?.totalProductions.currencies.thought || 0) }}/s)
     ui-content-switcher-box.right(:index="contentSwitcherIndex")
       template(v-slot:tabs)
         ui-content-switcher-tab(@click="contentSwitcherIndex = 0" :active="contentSwitcherIndex === 0")
@@ -26,14 +26,14 @@
             v-for="upgrade in revealedUpgrades.energy.value"
             :key="upgrade.id"
             :upgrade="upgrade"
-            @click="buyUpgrade(game.state, upgrade.id)"
+            @click="game && buyUpgrade(game.state, upgrade.id)"
           )
         ui-content-switcher-tab-box(:opacity=".75")
           upgrade-tile(
             v-for="upgrade in revealedUpgrades.thought.value"
             :key="upgrade.id"
             :upgrade="upgrade"
-            @click="buyUpgrade(game.state, upgrade.id)"
+            @click="game && buyUpgrade(game.state, upgrade.id)"
           )
     ui-icon.settings(
       name="io-settings"

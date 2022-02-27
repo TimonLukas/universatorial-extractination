@@ -1,5 +1,5 @@
 <template lang="pug">
-ui-button.upgrade-tile(:disabled="!game.upgrades.buyableUpgrades.includes(upgrade)")
+ui-button.upgrade-tile(:disabled="game ? !xunref(game.upgrades.buyableUpgrades).includes(upgrade) : false")
   .content
     .name {{ upgrade.name }}
     .description {{ upgrade.description }}
@@ -14,6 +14,7 @@ import { UiButton } from "@/components/ui"
 import { inject } from "vue"
 import { GAME_PROVIDE_KEY } from "@/constants"
 import type { Game } from "@/lib/game"
+import { unref } from "vue"
 
 const game = inject<Game>(GAME_PROVIDE_KEY)
 
