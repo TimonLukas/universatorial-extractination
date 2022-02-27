@@ -6,10 +6,12 @@
         .column
           .row
             ui-icon(name="hi-solid-lightning-bolt" title="Energy" fill="yellow" :scale="1.5")
-            span.number {{ game.state.currencies.energy }}
+            span.number {{ format(game.state.currencies.energy) }}
+            span.number.per-second ({{ format(game.totalProductions.currencies.energy) }}/s)
           .row
             ui-icon(name="hi-solid-chip" title="Thoughts" fill="cyan" :scale="1.5")
-            span.number {{ game.state.currencies.thought }}
+            span.number {{ format(game.state.currencies.thought) }}
+            span.number.per-second ({{ format(game.totalProductions.currencies.thought) }}/s)
     ui-content-switcher-box.right(:index="contentSwitcherIndex")
       template(v-slot:tabs)
         ui-content-switcher-tab(@click="contentSwitcherIndex = 0" :active="contentSwitcherIndex === 0")
@@ -42,6 +44,7 @@ import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox
 import { computed, inject, ref } from "vue"
 import { GAME_PROVIDE_KEY } from "@/constants"
 import type { Game } from "@/lib/game"
+import { format } from "@/lib/formatter"
 
 const isInRouteChangeToSettings = useIsInRouteChange(
   GameRoute.MAIN,
@@ -90,6 +93,9 @@ const game = inject<Game>(GAME_PROVIDE_KEY)
       font-family: "Red Hat Mono", monospace
       font-size: 1.5rem
       padding-left: .75rem
+
+      &.per-second
+        font-size: 1.25rem
 
     .column
       display: flex
