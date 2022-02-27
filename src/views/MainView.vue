@@ -6,12 +6,12 @@
         .column
           .row
             ui-icon(name="hi-solid-lightning-bolt" title="Energy" fill="yellow" :scale="1.5")
-            span.number {{ format(game?.state.currencies.energy || 0) }}
-            span.number.per-second ({{ format(game?.totalProductions.currencies.energy || 0) }}/s)
+            span.number {{ format(game?.state.currencies[Currency.ENERGY] || 0) }}
+            span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.ENERGY] || 0) }}/s)
           .row
             ui-icon(name="hi-solid-chip" title="Thoughts" fill="cyan" :scale="1.5")
-            span.number {{ format(game?.state.currencies.thought || 0) }}
-            span.number.per-second ({{ format(game?.totalProductions.currencies.thought || 0) }}/s)
+            span.number {{ format(game?.state.currencies[Currency.THOUGHTS] || 0) }}
+            span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.THOUGHTS] || 0) }}/s)
     ui-content-switcher-box.right(:index="contentSwitcherIndex")
       template(v-slot:tabs)
         ui-content-switcher-tab(@click="contentSwitcherIndex = 0" :active="contentSwitcherIndex === 0")
@@ -50,8 +50,8 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router"
 import { GameRoute, useIsInRouteChange } from "@/router"
-import { UpgradeTile } from "@/components"
 import { UiBox, UiIcon, UiContentSwitcherBox } from "@/components/ui"
+import { UpgradeTile } from "@/components"
 import UiContentSwitcherTab from "@/components/ui/box/UiContentSwitcherTab.vue"
 import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox.vue"
 import { computed, inject, ref, unref } from "vue"
@@ -59,6 +59,8 @@ import { GAME_PROVIDE_KEY } from "@/constants"
 import type { Game } from "@/lib/game"
 import { buyUpgrade } from "@/lib/game"
 import { format } from "@/lib/formatter"
+import { Currency } from "@/lib/game/currency"
+import { GeneratorNames } from "@/lib/game/generators"
 
 const isInRouteChangeToSettings = useIsInRouteChange(
   GameRoute.MAIN,
@@ -81,14 +83,14 @@ const revealedUpgrades = {
   energy: computed(() =>
     game
       ? unref(game.upgrades.revealedUpgrades).filter(
-          (upgrade) => upgrade.category === "energy"
+          (upgrade) => upgrade.category === Currency.ENERGY
         )
       : []
   ),
   thought: computed(() =>
     game
       ? unref(game.upgrades.revealedUpgrades).filter(
-          (upgrade) => upgrade.category === "thought"
+          (upgrade) => upgrade.category === Currency.THOUGHTS
         )
       : []
   ),

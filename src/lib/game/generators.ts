@@ -3,7 +3,7 @@ import type { Buyable, Nameable, Rebuyable } from "@/lib/game/types"
 import type { AllOf } from "@/lib/game/util"
 
 export enum GeneratorNames {
-  DRONE = "drone",
+  DRONE = "Drone",
 }
 export const generatorNames = Object.values(GeneratorNames) as GeneratorNames[]
 

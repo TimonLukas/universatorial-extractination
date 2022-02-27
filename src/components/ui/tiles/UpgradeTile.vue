@@ -5,9 +5,11 @@ ui-button.upgrade-tile(:disabled="game ? !unref(game.upgrades.buyableUpgrades).i
     .description {{ upgrade.description }}
   .cost
     upgrade-tile-cost(v-for="cost in upgrade.baseCost" :key="upgrade.id" :cost="cost")
+    upgrade-tile-bonus(:upgrade="upgrade")
 </template>
 
 <script lang="ts" setup>
+import UpgradeTileBonus from "./UpgradeTileBonus.vue"
 import UpgradeTileCost from "./UpgradeTileCost.vue"
 import type { Upgrade } from "@/lib/game/upgrades"
 import { UiButton } from "@/components/ui"
@@ -37,4 +39,7 @@ defineProps<{ upgrade: Upgrade }>()
   .description
     font-size: .9rem
     opacity: .75
+
+  .cost
+    text-align: right
 </style>

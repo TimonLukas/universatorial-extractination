@@ -1,5 +1,5 @@
 export enum Currency {
-  THOUGHTS = "thought",
-  ENERGY = "energy",
+  THOUGHTS = "Thought",
+  ENERGY = "Energy",
 }
 export const currencies = Object.values(Currency) as Currency[]

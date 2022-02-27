@@ -20,4 +20,5 @@ defineProps<{ cost: Cost }>()
   display: flex
   flex-direction: row
   gap: .5rem
+  justify-content: end
 </style>

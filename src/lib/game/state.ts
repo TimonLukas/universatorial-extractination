@@ -1,9 +1,8 @@
 import type { MaybeRef } from "@vueuse/core"
 
 import { Currency } from "./currency"
-import type { GeneratorNames } from "./generators"
+import { GeneratorNames } from "./generators"
 import type { Upgrade } from "./upgrades"
-import { upgradesById } from "@/lib/game/data"
 
 type MaybeNumber = MaybeRef<number>
 
@@ -23,7 +22,7 @@ export const initialize = (): GameState => ({
     [Currency.THOUGHTS]: 0,
   },
   generators: {
-    drone: {
+    [GeneratorNames.DRONE]: {
       bought: 0,
       generated: 0,
     },
