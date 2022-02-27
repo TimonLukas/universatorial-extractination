@@ -4,7 +4,7 @@ import type { GameState } from "@/lib/game/state"
 import { initialize } from "@/lib/game/state"
 import { useValues } from "@/lib/game/values"
 import { currencies } from "@/lib/game/currency"
-import { generatorNames } from "@/lib/game/generators"
+import { GeneratorNames, generatorNames } from "@/lib/game/generators"
 
 const createGame = (): { state: GameState } & ReturnType<typeof useValues> => {
   const state = reactive<GameState>(initialize())
@@ -13,8 +13,11 @@ const createGame = (): { state: GameState } & ReturnType<typeof useValues> => {
 
   let lastUpdateExecution = Date.now()
   const update = (): void => {
-    const elapsedTimeInS = (Date.now() - lastUpdateExecution) / 1000
+    const elapsedTimeInMs = Date.now() - lastUpdateExecution
+    const elapsedTimeInS = elapsedTimeInMs / 1000
     lastUpdateExecution = Date.now()
+
+    state.generators[GeneratorNames.DRONE].bought = state.droneLifetimes.length
 
     currencies.forEach((currency) => {
       state.currencies[currency] +=
@@ -25,6 +28,16 @@ const createGame = (): { state: GameState } & ReturnType<typeof useValues> => {
       state.generators[generator].generated +=
         unref(totalProductions.generators[generator]) * elapsedTimeInS
     })
+
+    state.droneLifetimes
+      .map((_, i) => i)
+      .filter((index) => {
+        state.droneLifetimes[index] -= elapsedTimeInMs
+
+        return state.droneLifetimes[index] < 0
+      })
+      .sort((a, b) => b - a)
+      .forEach((index) => state.droneLifetimes.splice(index, 1))
 
     requestAnimationFrame(update)
   }

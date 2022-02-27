@@ -14,6 +14,7 @@ export type GameState = {
   >
   upgradesBought: Set<Upgrade>
   upgradesRevealed: Set<Upgrade>
+  droneLifetimes: number[]
 }
 
 export const initialize = (): GameState => ({
@@ -29,4 +30,5 @@ export const initialize = (): GameState => ({
   },
   upgradesBought: new Set(),
   upgradesRevealed: new Set(),
+  droneLifetimes: [],
 })

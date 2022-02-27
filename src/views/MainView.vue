@@ -2,16 +2,23 @@
 .view.main(:class="transitionClass")
   .ui
     ui-box(:opacity=".75").top
-      .resources
-        .column
-          .row
-            ui-icon(name="hi-solid-lightning-bolt" title="Energy" fill="yellow" :scale="1.5")
-            span.number {{ format(game?.state.currencies[Currency.ENERGY] || 0) }}
-            span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.ENERGY] || 0) }}/s)
-          .row
-            ui-icon(name="hi-solid-chip" title="Thoughts" fill="cyan" :scale="1.5")
-            span.number {{ format(game?.state.currencies[Currency.THOUGHTS] || 0) }}
-            span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.THOUGHTS] || 0) }}/s)
+      .ui-elements
+        .resources
+          .column
+            .row
+              ui-icon(name="hi-solid-lightning-bolt" title="Energy" fill="yellow" :scale="1.5")
+              span.number {{ format(game?.state.currencies[Currency.ENERGY] || 0) }}
+              span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.ENERGY] || 0) }}/s)
+            .row
+              ui-icon(name="hi-solid-chip" title="Thoughts" fill="cyan" :scale="1.5")
+              span.number {{ format(game?.state.currencies[Currency.THOUGHTS] || 0) }}
+              span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.THOUGHTS] || 0) }}/s)
+        .drones
+          .name Drones
+          .amount Currently active: {{ game.state.generators[GeneratorNames.DRONE].bought }}
+          ui-button(@click="buyDrone(game.state, game.prices)" :disabled="game.state.currencies[Currency.ENERGY] < game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]")
+            | Buy drone for {{ format(game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]) }}
+            ui-icon(name="hi-solid-lightning-bolt" fill="yellow")
     ui-content-switcher-box.right(:index="contentSwitcherIndex")
       template(v-slot:tabs)
         ui-content-switcher-tab(@click="contentSwitcherIndex = 0" :active="contentSwitcherIndex === 0")
@@ -50,14 +57,14 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router"
 import { GameRoute, useIsInRouteChange } from "@/router"
-import { UiBox, UiIcon, UiContentSwitcherBox } from "@/components/ui"
+import { UiBox, UiIcon, UiContentSwitcherBox, UiButton } from "@/components/ui"
 import { UpgradeTile } from "@/components"
 import UiContentSwitcherTab from "@/components/ui/box/UiContentSwitcherTab.vue"
 import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox.vue"
 import { computed, inject, ref, unref } from "vue"
 import { GAME_PROVIDE_KEY } from "@/constants"
 import type { Game } from "@/lib/game"
-import { buyUpgrade } from "@/lib/game"
+import { buyUpgrade, buyDrone } from "@/lib/game"
 import { format } from "@/lib/formatter"
 import { Currency } from "@/lib/game/currency"
 import { GeneratorNames } from "@/lib/game/generators"
@@ -138,12 +145,26 @@ const revealedUpgrades = {
       left: 1rem
       width: calc(75vw - 1.75rem)
       height: 15vh
-      display: flex
-      flex-direction: row
 
       .resources
         height: 100%
         padding-left: 1rem
+
+      .ui-elements
+        display: flex
+        flex-direction: row
+
+        > *
+          &:not(:first-child)
+            padding-left: 1rem
+            border-left: 1px solid #666666
+
+          &:not(:last-child)
+            margin-right: 1rem
+
+        .drones
+          button
+            padding: .5rem
 
     .right
       position: absolute
