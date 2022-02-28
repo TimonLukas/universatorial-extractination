@@ -106,19 +106,19 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
     vec3 starSphere	= vec3(0.0);
 
-    if (dist < radius) {
-        corona *= pow(dist * invRadius * max(0.0, iGlowFactor), 24.0);
-        vec2 baseUv = sp.xy * f;
+    float distInRadiusFactor = clamp(floor(radius / dist), 0.0, 1.0);
 
-        float textureSizeModifier1 = pow(smoothPerlin(time * 0.15, SMOOTH_PERLIN_PARAMS_SIZE), 1.5);
+    corona *= max(pow(dist * invRadius * max(0.0, iGlowFactor), 24.0) * distInRadiusFactor, 1.0);
+    vec2 baseUv = sp.xy * f;
 
-        float texture0Angle = smoothPerlin(time / 10.0, SMOOTH_PERLIN_PARAMS_ANGLE_0);
-        float texture1Angle = smoothPerlin(time / 12.50, SMOOTH_PERLIN_PARAMS_ANGLE_1);
+    float textureSizeModifier1 = pow(smoothPerlin(time * 0.15, SMOOTH_PERLIN_PARAMS_SIZE), 1.5);
 
-        vec3 starTexture0 = texture2D(iChannel0, baseUv + normalize(vec2(sin(texture0Angle), cos(texture0Angle)))).rgb * 0.5;
+    float texture0Angle = smoothPerlin(time / 10.0, SMOOTH_PERLIN_PARAMS_ANGLE_0);
+    float texture1Angle = smoothPerlin(time / 12.50, SMOOTH_PERLIN_PARAMS_ANGLE_1);
 
-        starSphere = sqrt(starTexture0 * 0.3);
-    }
+    vec3 starTexture0 = texture2D(iChannel0, baseUv + normalize(vec2(sin(texture0Angle), cos(texture0Angle)))).rgb * 0.5;
+
+    starSphere = sqrt(starTexture0 * 0.3) * distInRadiusFactor;
 
     float starGlow = min(max(1.0 - dist * (1.0 - iBrightness), 0.0), 1.0);
     fragColor.rgb  = vec3(f * (0.75 + iBrightness * 0.3) * orange) * iGlowFactor * 2.2 + starSphere * iGlowFactor +  corona * orange * max(iCoronaFactor, 0.0) + starGlow * orangeRed;
