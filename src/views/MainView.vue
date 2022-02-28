@@ -13,12 +13,12 @@
               ui-icon(name="hi-solid-chip" title="Thoughts" fill="cyan" :scale="1.5")
               span.number {{ format(game?.state.currencies[Currency.THOUGHTS] || 0) }}
               span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.THOUGHTS] || 0) }}/s)
-        .drones(v-show="game.state.goalsAchieved.has(GoalId._001_DRONES)")
+        .drones(v-show="game?.state.goalsAchieved.has(GoalId._001_DRONES)")
           .row
             .stats
               .name Drones
               .amount Active: {{ game?.state.generators[GeneratorNames.DRONE].bought || 0 }}
-              .life Base life: {{ Math.round((game?.droneLifetime || 0)) / 1000 }}s
+              .life Base life: {{ Math.round(unref(game?.droneLifetime || 0)) / 1000 }}s
             ui-button(@click="game && game.actions.buyDrone()" :disabled="!game || game.state.currencies[Currency.ENERGY] < game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]")
               | Buy 1 drone#[br]{{ game && format(game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]) }}
               ui-icon(name="hi-solid-lightning-bolt" fill="yellow" :scale="0.8")
