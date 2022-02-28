@@ -5,8 +5,9 @@ import { applyCosts, canAfford } from "@/lib/game/cost"
 import { GeneratorNames } from "@/lib/game/generators"
 import type { Prices } from "@/lib/game/values/prices"
 import { unref } from "vue"
+import type { MaybeRef } from "@vueuse/core"
 
-export const buyUpgrade = (state: GameState, upgradeId: UpgradeId) => {
+export const buyUpgrade = (state: GameState) => (upgradeId: UpgradeId) => {
   const upgrade = upgradesById[upgradeId]
 
   if (!canAfford(state.currencies, upgrade.baseCost)) {
@@ -18,14 +19,15 @@ export const buyUpgrade = (state: GameState, upgradeId: UpgradeId) => {
   applyCosts(state.currencies, upgrade.baseCost)
 }
 
-export const buyDrone = (state: GameState, prices: Prices) => {
-  const generator = generators[GeneratorNames.DRONE]
+export const buyDrone =
+  (state: GameState, droneLifetime: MaybeRef<number>, prices: Prices) => () => {
+    const generator = generators[GeneratorNames.DRONE]
 
-  if (!canAfford(state.currencies, generator.baseCost)) {
-    return
+    if (!canAfford(state.currencies, generator.baseCost)) {
+      return
+    }
+
+    state.droneLifetimes.push(unref(droneLifetime))
+
+    applyCosts(state.currencies, prices.generators[GeneratorNames.DRONE])
   }
-
-  state.droneLifetimes.push(unref(state.droneInitialLifetime))
-
-  applyCosts(state.currencies, prices.generators[GeneratorNames.DRONE])
-}

@@ -62,11 +62,9 @@ onMounted(() => {
     ctx.fillStyle = "black"
     game?.state.droneLifetimes.forEach((remainingLifetime) => {
       const angle =
-        -(0.5 * (unref(game?.state.droneInitialLifetime) - remainingLifetime)) /
-        1000
+        -(0.5 * (unref(game?.droneLifetime) - remainingLifetime)) / 1000
       const radiusFraction = Math.min(
-        Math.tanh(remainingLifetime / unref(game?.state.droneInitialLifetime)) +
-          0.25,
+        Math.tanh(remainingLifetime / unref(game?.droneLifetime)) + 0.25,
         1
       )
 

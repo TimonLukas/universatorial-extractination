@@ -20,13 +20,12 @@ export const useValues = (
     buyableUpgrades: MaybeRef<Upgrade[]>
     revealedUpgrades: MaybeRef<Upgrade[]>
   }
+  droneLifetime: MaybeRef<number>
 } => {
   const prices = usePrices(state)
   const bonuses = useGeneratorBonuses(state)
-  const { generatorProductions, totalProductions } = useProductions(
-    state,
-    bonuses
-  )
+  const { generatorProductions, totalProductions, droneLifetime } =
+    useProductions(state, bonuses)
   const upgrades = useUpgrades(state)
 
   return {
@@ -34,6 +33,7 @@ export const useValues = (
     bonuses,
     generatorProductions,
     totalProductions,
+    droneLifetime,
     upgrades,
   }
 }

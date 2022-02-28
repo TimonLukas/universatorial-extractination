@@ -6,7 +6,8 @@ import type { Currency } from "./currency"
 export enum UpgradeId {
   _001_START_THINKING,
   _002_INITIAL_ENERGY,
-  _003_DRONE_EFFICIENCY,
+  _003_DRONE_EFFICIENCY_1,
+  _004_DRONE_LIFETIME_1,
 }
 
 type Targeting =
@@ -17,6 +18,10 @@ type Targeting =
   | {
       targetType: "total"
       target: Currency
+    }
+  | {
+      targetType: "special"
+      target: "droneLifetime"
     }
 
 export type Upgrade = Readonly<

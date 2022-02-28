@@ -5,11 +5,25 @@ import { initialize } from "@/lib/game/state"
 import { useValues } from "@/lib/game/values"
 import { currencies } from "@/lib/game/currency"
 import { GeneratorNames, generatorNames } from "@/lib/game/generators"
+import * as actions from "@/lib/game/actions"
+import type { UpgradeId } from "@/lib/game/upgrades"
 
-const createGame = (): { state: GameState } & ReturnType<typeof useValues> => {
+const createGame = (): {
+  state: GameState
+  actions: {
+    buyUpgrade: (id: UpgradeId) => void
+    buyDrone: () => void
+  }
+} & ReturnType<typeof useValues> => {
   const state = reactive<GameState>(initialize())
-  const { prices, bonuses, generatorProductions, totalProductions, upgrades } =
-    useValues(state)
+  const {
+    prices,
+    bonuses,
+    generatorProductions,
+    totalProductions,
+    droneLifetime,
+    upgrades,
+  } = useValues(state)
 
   let lastUpdateExecution = Date.now()
   const update = (): void => {
@@ -45,15 +59,19 @@ const createGame = (): { state: GameState } & ReturnType<typeof useValues> => {
 
   return {
     state,
+    droneLifetime,
     prices,
     bonuses,
     generatorProductions,
     totalProductions,
     upgrades,
+    actions: {
+      buyUpgrade: actions.buyUpgrade(state),
+      buyDrone: actions.buyDrone(state, droneLifetime, prices),
+    },
   }
 }
 
 export default useMemoize(createGame)
-export * from "./actions"
 
 export type Game = ReturnType<typeof createGame>

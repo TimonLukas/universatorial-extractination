@@ -14,11 +14,14 @@
               span.number {{ format(game?.state.currencies[Currency.THOUGHTS] || 0) }}
               span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.THOUGHTS] || 0) }}/s)
         .drones
-          .name Drones
-          .amount Currently active: {{ game?.state.generators[GeneratorNames.DRONE].bought || 0 }}
-          ui-button(@click="game && buyDrone(game.state, game.prices)" :disabled="!game || game.state.currencies[Currency.ENERGY] < game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]")
-            | Buy drone for {{ game && format(game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]) }}
-            ui-icon(name="hi-solid-lightning-bolt" fill="yellow")
+          .row
+            .stats
+              .name Drones
+              .amount Active: {{ game?.state.generators[GeneratorNames.DRONE].bought || 0 }}
+              .life Base life: {{ Math.round((game?.droneLifetime || 0)) / 1000 }}s
+            ui-button(@click="game && game.actions.buyDrone()" :disabled="!game || game.state.currencies[Currency.ENERGY] < game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]")
+              | Buy 1 drone#[br]{{ game && format(game.prices.generators[GeneratorNames.DRONE][Currency.ENERGY]) }}
+              ui-icon(name="hi-solid-lightning-bolt" fill="yellow" :scale="0.8")
     ui-content-switcher-box.right(:index="contentSwitcherIndex")
       template(v-slot:tabs)
         ui-content-switcher-tab(@click="contentSwitcherIndex = 0" :active="contentSwitcherIndex === 0")
@@ -33,14 +36,14 @@
             v-for="upgrade in revealedUpgrades.energy.value"
             :key="upgrade.id"
             :upgrade="upgrade"
-            @click="game && buyUpgrade(game.state, upgrade.id)"
+            @click="game && game.actions.buyUpgrade(upgrade.id)"
           )
         ui-content-switcher-tab-box(:opacity=".75")
           upgrade-tile(
             v-for="upgrade in revealedUpgrades.thought.value"
             :key="upgrade.id"
             :upgrade="upgrade"
-            @click="game && buyUpgrade(game.state, upgrade.id)"
+            @click="game && game.actions.buyUpgrade(upgrade.id)"
           )
     ui-icon.settings(
       name="io-settings"
@@ -64,7 +67,6 @@ import UiContentSwitcherTabBox from "@/components/ui/box/UiContentSwitcherTabBox
 import { computed, inject, ref, unref } from "vue"
 import { GAME_PROVIDE_KEY } from "@/constants"
 import type { Game } from "@/lib/game"
-import { buyUpgrade, buyDrone } from "@/lib/game"
 import { format } from "@/lib/formatter"
 import { Currency } from "@/lib/game/currency"
 import { GeneratorNames } from "@/lib/game/generators"
@@ -137,34 +139,49 @@ const revealedUpgrades = {
       display: flex
       flex-direction: column
       height: 100%
-      justify-content: space-between
+      justify-content: space-evenly
 
     .top
       position: absolute
       top: 1rem
       left: 1rem
       width: calc(75vw - 1.75rem)
-      height: 15vh
-
-      .resources
-        height: 100%
-        padding-left: 1rem
+      height: 10rem
 
       .ui-elements
         display: flex
         flex-direction: row
+        align-items: center
+        height: 100%
+
+        .resources
+          height: 100%
+          padding-left: 1rem
 
         > *
           &:not(:first-child)
-            padding-left: 1rem
-            border-left: 1px solid #666666
+            padding-left: 2rem
+            border-left: 1px solid rgba(200, 200, 200, 0.25)
 
           &:not(:last-child)
-            margin-right: 1rem
+            margin-right: 2rem
 
         .drones
-          button
-            padding: .5rem
+          .name
+            font-size: 1.25rem
+            font-weight: bold
+            margin-bottom: .5rem
+
+          .row
+            display: flex
+            flex-direction: row
+            gap: 1rem
+
+            button
+              padding: .5rem
+              font-size: .8rem
+              margin-top: .75rem
+              margin-bottom: .75rem
 
     .right
       position: absolute

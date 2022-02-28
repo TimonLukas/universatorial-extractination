@@ -13,8 +13,6 @@ import { useElementSize } from "@vueuse/core"
 import { createShaderProgram } from "@/lib/shader"
 import fragmentShader from "@/assets/star-shader-fragment.glsl?raw"
 import vertexShader from "@/assets/star-shader-vertex.glsl?raw"
-import sunTexturePath from "@/assets/texture-sun.jpg"
-import { fetchImage } from "@/lib/image"
 import { useSettingsStore } from "@/stores"
 
 const canvas = ref<HTMLCanvasElement>()
@@ -95,8 +93,6 @@ onMounted(() => {
     "iGlowFactor"
   )
 
-  const textureAttribute = gl.getUniformLocation(program.value, "iChannel0")
-
   const positionBuffer = gl.createBuffer()
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
   gl.bufferData(
@@ -118,8 +114,6 @@ onMounted(() => {
     gl.STATIC_DRAW
   )
 
-  const shaderSunTexture = gl.createTexture()
-
   const previousTime = ref(0)
   const totalTime = ref(0)
   function render(currentTime: number) {
@@ -140,7 +134,6 @@ onMounted(() => {
     gl.vertexAttribPointer(positionAttribute, 2, gl.FLOAT, false, 0, 0)
     gl.uniform2f(resolutionAttribute, gl.canvas.width, gl.canvas.height)
     gl.uniform1f(timeAttribute, unref(totalTime) / 1e3)
-    gl.uniform1i(textureAttribute, 0)
     gl.uniform1f(brightnessAttribute, props.brightness)
     gl.uniform1f(coronaFactorAttribute, props.coronaFactor)
     gl.uniform1f(sphereRadiusAttribute, props.sphereRadius)
@@ -152,32 +145,7 @@ onMounted(() => {
     requestAnimationFrame(render)
   }
 
-  ;(async () => {
-    const result = await fetchImage(sunTexturePath)
-
-    if (result.isErr) {
-      return console.error(result.error)
-    }
-
-    sunTexture.value = result.value
-
-    gl.bindTexture(gl.TEXTURE_2D, shaderSunTexture)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      sunTexture.value
-    )
-    gl.activeTexture(gl.TEXTURE0)
-
-    console.log("Start rendering star")
-    requestAnimationFrame(render)
-  })()
+  requestAnimationFrame(render)
 })
 </script>
 

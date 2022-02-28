@@ -1,8 +1,9 @@
 <template lang="pug">
 .background(:style="{ transform: universeTransformation }")
   universe
-drone-layer
-.star(:style="{ transform: starTransformation }"): star(:total-radius="0.5" :brightness="0" :speed-factor="-2")
+.star(:style="{ transform: starTransformation }")
+  star(:total-radius="0.5" :brightness="0" :speed-factor="-2")
+  drone-layer
 .content(@click="startMusic")
   router-view(v-slot="{ Component, route }")
     transition(name="view-change")
@@ -87,6 +88,16 @@ body
     &.star
       transition: transform 1s ease-out
       z-index: 1
+
+      > *
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+
+        &:first-child
+          z-index: 1
 
     &.content
       z-index: 10

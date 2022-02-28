@@ -21,6 +21,8 @@ export type TotalProductions = GameValue<
   "currencies" | "generators"
 >
 
+const DRONE_INITIAL_LIFETIME_IN_MS = 15_000
+
 const sumProductions = <
   Key extends keyof AllProductions = keyof AllProductions
 >(
@@ -131,12 +133,14 @@ const useUpgradeProductions = (
   },
 })
 
+const productionTargets = [...generatorNames, ...currencies]
 export const useProductions = (
   state: GameState,
   bonuses: GeneratorBonuses
 ): {
   generatorProductions: GeneratorProductions
   totalProductions: TotalProductions
+  droneLifetime: MaybeRef<number>
 } => {
   const upgradeProductions = useUpgradeProductions(state)
 
@@ -161,11 +165,7 @@ export const useProductions = (
             ])
           )
 
-          return toAllOf<AllProductions>(
-            productions,
-            [...generatorNames, ...currencies],
-            0
-          )
+          return toAllOf<AllProductions>(productions, productionTargets, 0)
         }),
       ])
     ),
@@ -194,7 +194,28 @@ export const useProductions = (
     ])
   )
 
+  const droneLifetime = computed(() => {
+    let lifetime = 1
+    let multiplier = 1
+
+    for (const upgrade of state.upgradesBought) {
+      if (
+        upgrade.targetType === "special" &&
+        upgrade.target === "droneLifetime"
+      ) {
+        if (upgrade.type === "base") {
+          lifetime += upgrade.value
+        } else if (upgrade.type === "multiplier") {
+          multiplier *= upgrade.value
+        }
+      }
+    }
+
+    return DRONE_INITIAL_LIFETIME_IN_MS * lifetime * multiplier
+  })
+
   return {
+    droneLifetime,
     generatorProductions,
     totalProductions: {
       generators: totalGeneratorProductions,
