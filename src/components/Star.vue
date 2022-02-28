@@ -175,6 +175,7 @@ onMounted(() => {
     )
     gl.activeTexture(gl.TEXTURE0)
 
+    console.log("Start rendering star")
     requestAnimationFrame(render)
   })()
 })

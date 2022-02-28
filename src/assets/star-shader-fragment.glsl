@@ -61,6 +61,10 @@ float smoothPerlin(float offset, float a, float b, float c, float d, float e, fl
     return (sin(offset * a) * b + tan(offset * c) * d + cos(offset * e) * f) / (b + d + f);
 }
 
+float tanh(float x) {
+    return (exp(2.0 * x) - 1.0) / (exp(2.0 * x) + 1.0);
+}
+
 vec3 orange		= vec3(0.8, 0.65, 0.3);
 vec3 orangeRed  = vec3(0.8, 0.35, 0.1);
 
@@ -118,7 +122,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
     float starGlow = min(max(1.0 - dist * (1.0 - iBrightness), 0.0), 1.0);
     fragColor.rgb  = vec3(f * (0.75 + iBrightness * 0.3) * orange) * iGlowFactor * 2.2 + starSphere * iGlowFactor +  corona * orange * max(iCoronaFactor, 0.0) + starGlow * orangeRed;
-    fragColor.a	   = - 0.25 - dist;
+    fragColor.a	   = (-tanh((dist * 2.5)) + 1.0) / 2.0;
 }
 
 void main() {
