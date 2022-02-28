@@ -4,8 +4,7 @@ import { generators, upgradesById } from "@/lib/game/data"
 import { applyCosts, canAfford } from "@/lib/game/cost"
 import { GeneratorNames } from "@/lib/game/generators"
 import type { Prices } from "@/lib/game/values/prices"
-
-const DRONE_BASE_LIFETIME_IN_MS = 15 * 1000
+import { unref } from "vue"
 
 export const buyUpgrade = (state: GameState, upgradeId: UpgradeId) => {
   const upgrade = upgradesById[upgradeId]
@@ -26,7 +25,7 @@ export const buyDrone = (state: GameState, prices: Prices) => {
     return
   }
 
-  state.droneLifetimes.push(DRONE_BASE_LIFETIME_IN_MS)
+  state.droneLifetimes.push(unref(state.droneInitialLifetime))
 
   applyCosts(state.currencies, prices.generators[GeneratorNames.DRONE])
 }

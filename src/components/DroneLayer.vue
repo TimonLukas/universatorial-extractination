@@ -44,16 +44,16 @@ onMounted(() => {
     // render station itself
     ctx.fillStyle = "black"
     ctx.fillRect(
-      (0.5 - SUN_RADIUS) * width.value,
-      0.5 * height.value,
+      (0.5 - SUN_RADIUS) * width.value - stationSizeInPx.value / 2,
+      0.5 * height.value - stationSizeInPx.value / 2,
       stationSizeInPx.value,
       stationSizeInPx.value
     )
 
     ctx.fillStyle = "red"
     ctx.fillRect(
-      (0.5 - SUN_RADIUS) * width.value + 6,
-      0.5 * height.value + 6,
+      (0.5 - SUN_RADIUS) * width.value - stationSizeInPx.value / 2 + 6,
+      0.5 * height.value - stationSizeInPx.value / 2 + 6,
       3,
       3
     )
@@ -61,9 +61,12 @@ onMounted(() => {
     // render drones
     ctx.fillStyle = "black"
     game?.state.droneLifetimes.forEach((remainingLifetime) => {
-      const angle = -(0.5 * (15_000 - remainingLifetime)) / 1000
+      const angle =
+        -(0.5 * (unref(game?.state.droneInitialLifetime) - remainingLifetime)) /
+        1000
       const radiusFraction = Math.min(
-        Math.tanh(remainingLifetime / 15_000) + 0.25,
+        Math.tanh(remainingLifetime / unref(game?.state.droneInitialLifetime)) +
+          0.25,
         1
       )
 
