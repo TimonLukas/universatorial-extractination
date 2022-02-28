@@ -25,8 +25,9 @@ export const cEnergy = withKey("category", Currency.ENERGY)
 export const cThoughts = withKey("category", Currency.THOUGHTS)
 
 export const upgrade = <
-  T extends Omit<Upgrade, "category" | "type" | "targetType" | "target">
+  T extends Omit<Upgrade, "id" | "category" | "type" | "targetType" | "target">
 >(
+  id: Upgrade["id"],
   category: Upgrade["category"],
   type: Upgrade["type"],
   targetType: Upgrade["targetType"],
@@ -35,6 +36,7 @@ export const upgrade = <
 ): Upgrade =>
   ({
     ...input,
+    id,
     category,
     type,
     targetType,

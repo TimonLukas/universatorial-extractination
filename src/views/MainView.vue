@@ -13,7 +13,7 @@
               ui-icon(name="hi-solid-chip" title="Thoughts" fill="cyan" :scale="1.5")
               span.number {{ format(game?.state.currencies[Currency.THOUGHTS] || 0) }}
               span.number.per-second ({{ format(game?.totalProductions.currencies[Currency.THOUGHTS] || 0) }}/s)
-        .drones
+        .drones(v-show="game.state.goalsAchieved.has(GoalId._001_DRONES)")
           .row
             .stats
               .name Drones
@@ -70,6 +70,7 @@ import type { Game } from "@/lib/game"
 import { format } from "@/lib/formatter"
 import { Currency } from "@/lib/game/currency"
 import { GeneratorNames } from "@/lib/game/generators"
+import { GoalId } from "@/lib/game/goal"
 
 const isInRouteChangeToSettings = useIsInRouteChange(
   GameRoute.MAIN,

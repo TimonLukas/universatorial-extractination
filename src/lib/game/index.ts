@@ -1,5 +1,5 @@
 import { useMemoize } from "@vueuse/core"
-import { reactive, unref } from "vue"
+import { computed, reactive, unref } from "vue"
 import type { GameState } from "@/lib/game/state"
 import { initialize } from "@/lib/game/state"
 import { useValues } from "@/lib/game/values"
@@ -7,6 +7,8 @@ import { currencies } from "@/lib/game/currency"
 import { GeneratorNames, generatorNames } from "@/lib/game/generators"
 import * as actions from "@/lib/game/actions"
 import type { UpgradeId } from "@/lib/game/upgrades"
+import { goals } from "@/lib/game/goal"
+import { canAfford } from "@/lib/game/cost"
 
 const createGame = (): {
   state: GameState
@@ -24,6 +26,10 @@ const createGame = (): {
     droneLifetime,
     upgrades,
   } = useValues(state)
+
+  const unachievedGoals = computed(() =>
+    Object.values(goals).filter((goal) => !state.goalsAchieved.has(goal.id))
+  )
 
   let lastUpdateExecution = Date.now()
   const update = (): void => {
@@ -52,6 +58,10 @@ const createGame = (): {
       })
       .sort((a, b) => b - a)
       .forEach((index) => state.droneLifetimes.splice(index, 1))
+
+    unachievedGoals.value
+      .filter((goal) => canAfford(state.currencies, goal.cost))
+      .forEach((goal) => state.goalsAchieved.add(goal.id))
 
     requestAnimationFrame(update)
   }
