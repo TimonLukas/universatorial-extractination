@@ -10,6 +10,8 @@ import type { UpgradeId } from "@/lib/game/upgrades"
 import { goals } from "@/lib/game/goal"
 import { canAfford } from "@/lib/game/cost"
 
+const TARGET_UPDATES_PER_SECOND = 20
+
 const createGame = (): {
   state: GameState
   actions: {
@@ -63,7 +65,8 @@ const createGame = (): {
       .filter((goal) => canAfford(state.currencies, goal.cost))
       .forEach((goal) => state.goalsAchieved.add(goal.id))
 
-    requestAnimationFrame(update)
+    const passedTime = Date.now() - lastUpdateExecution
+    setTimeout(update, 1000 / TARGET_UPDATES_PER_SECOND - passedTime)
   }
   update()
 
