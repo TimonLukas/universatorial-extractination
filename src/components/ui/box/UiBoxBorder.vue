@@ -53,7 +53,6 @@ const color = ref("#444444")
         stroke: #444444
 
       &.highlight
-        filter: blur(2px)
         path
           opacity: .8
           stroke: white
